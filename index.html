@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly - Task Management App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="nav-logo fas fa-tasks"></i>
+        <span class="nav-title">Taskly</span>
+      </div>
+      <div class="nav-actions">
+        <button id="search-toggle" aria-label="Search tasks">
+          <i class="fas fa-search"></i>
+        </button>
+        <button id="theme-toggle" aria-label="Toggle Light/Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="search-container" id="search-container">
+    <div class="search-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="search-input" placeholder="Search tasks..." />
+      <button id="search-close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="main-container">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button id="add-folder-btn" class="btn-secondary">
+          <i class="fas fa-folder-plus"></i>
+          <span>New Folder</span>
+        </button>
+      </div>
+      
+      <div class="sidebar-content">
+        <div class="folder-list" id="folder-list">
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div class="quick-filters">
+          <button class="filter-btn active" data-filter="all">
+            <i class="fas fa-list"></i>
+            <span>All Tasks</span>
+          </button>
+          <button class="filter-btn" data-filter="today">
+            <i class="fas fa-calendar-day"></i>
+            <span>Today</span>
+          </button>
+          <button class="filter-btn" data-filter="upcoming">
+            <i class="fas fa-calendar-week"></i>
+            <span>Upcoming</span>
+          </button>
+          <button class="filter-btn" data-filter="completed">
+            <i class="fas fa-check-circle"></i>
+            <span>Completed</span>
+          </button>
+          <button class="filter-btn" data-filter="archived">
+            <i class="fas fa-archive"></i>
+            <span>Archived</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="content-header">
+        <div class="header-left">
+          <h1 id="current-view-title">All Tasks</h1>
+          <span id="task-count" class="task-count">0 tasks</span>
+        </div>
+        <div class="header-right">
+          <div class="view-toggle">
+            <button class="view-btn active" data-view="list">
+              <i class="fas fa-list"></i>
+            </button>
+            <button class="view-btn" data-view="calendar">
+              <i class="fas fa-calendar-alt"></i>
+            </button>
+          </div>
+          <button id="add-task-btn" class="btn-primary">
+            <i class="fas fa-plus"></i>
+            <span>Add Task</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <div class="sort-controls">
+          <select id="sort-select">
+            <option value="dueDate">Sort by Due Date</option>
+            <option value="priority">Sort by Priority</option>
+            <option value="alphabetical">Sort Alphabetically</option>
+            <option value="created">Sort by Created Date</option>
+          </select>
+        </div>
+        <div class="view-controls">
+          <button id="bulk-actions-btn" class="btn-secondary" disabled>
+            <i class="fas fa-tasks"></i>
+            <span>Bulk Actions</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="task-container" id="task-container">
+        <div class="task-list" id="task-list">
+
+        </div>
+      </div>
+      <div class="calendar-container" id="calendar-container" style="display: none;">
+        <div class="calendar-header">
+          <button id="prev-month">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h2 id="current-month">January 2024</h2>
+          <button id="next-month">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid">
+          
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="task-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Add New Task</h2>
+        <button class="modal-close" id="modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="task-form">
+        <div class="form-group">
+          <label for="task-title">Title *</label>
+          <input type="text" id="task-title" name="task-title" required placeholder="Enter task title">
+        </div>
+        
+        <div class="form-group">
+          <label for="task-description">Description</label>
+          <textarea id="task-description" name="task-description" placeholder="Enter task description (optional)"></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-folder">Folder</label>
+            <select id="task-folder" name="task-folder">
+              <option value="">No Folder</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority" name="task-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date" name="task-due-date">
+          </div>
+          
+          <div class="form-group">
+            <label for="task-reminder">Reminder</label>
+            <select id="task-reminder" name="task-reminder">
+              <option value="">No Reminder</option>
+              <option value="15">15 minutes before</option>
+              <option value="30">30 minutes before</option>
+              <option value="60">1 hour before</option>
+              <option value="1440">1 day before</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="task-recurring">Recurring</label>
+          <select id="task-recurring" name="task-recurring">
+            <option value="">No Repeat</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+    </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="folder-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="folder-modal-title">Create New Folder</h2>
+        <button class="modal-close" id="folder-modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="folder-form">
+        <div class="form-group">
+          <label for="folder-name">Folder Name *</label>
+          <input type="text" id="folder-name" name="folder-name" required placeholder="Enter folder name">
+        </div>
+        
+        <div class="form-group">
+          <label for="folder-color">Color</label>
+          <div class="color-picker" id="folder-color-picker">
+            <div class="color-option" data-color="#3b82f6" style="background-color: #3b82f6;"></div>
+            <div class="color-option" data-color="#10b981" style="background-color: #10b981;"></div>
+            <div class="color-option" data-color="#f59e0b" style="background-color: #f59e0b;"></div>
+            <div class="color-option" data-color="#ef4444" style="background-color: #ef4444;"></div>
+            <div class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"></div>
+            <div class="color-option" data-color="#06b6d4" style="background-color: #06b6d4;"></div>
+          </div>
+    </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="folder-modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Create Folder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
